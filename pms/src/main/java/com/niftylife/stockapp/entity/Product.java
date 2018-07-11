@@ -13,7 +13,7 @@ public class Product {
     private Long productId;
     private String productCode;
     private String productName;
-    private String Category;
+    private String category;
     private String description;
     private String image;
     private int colors;
@@ -26,13 +26,15 @@ public class Product {
     public Product(String productCode, String productName, String category, String description, String image, int colors, BigDecimal costPrice, BigDecimal extraExpenses) {
         this.productCode = productCode;
         this.productName = productName;
-        Category = category;
+        this.category = category;
         this.description = description;
         this.image = image;
         this.colors = colors;
         this.costPrice = costPrice;
         this.extraExpenses = extraExpenses;
     }
+
+
 
     public Long getProductId() {
         return productId;
@@ -59,11 +61,11 @@ public class Product {
     }
 
     public String getCategory() {
-        return Category;
+        return category;
     }
 
     public void setCategory(String category) {
-        Category = category;
+        category = category;
     }
 
     public String getDescription() {

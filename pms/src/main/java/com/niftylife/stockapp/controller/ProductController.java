@@ -5,6 +5,8 @@ import com.niftylife.stockapp.dao.ProductDao;
 import com.niftylife.stockapp.entity.Product;
 import com.niftylife.stockapp.entity.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,20 +50,37 @@ public class ProductController {
 
     }
 
+    @RequestMapping(value = "api/updateProduct", method = RequestMethod.POST)
+    public Response updateProduct(@RequestBody Product product){
+        Product result = productDao.save(product);
+        Response response = new Response();
+        if (result != null){
+            response.setStatus("success");
+            response.setMessage("Data updated successfully");
+            response.setData(result);
+            return response;
+        }
+        response.setStatus("error");
+        response.setMessage("Invalid request.. somethings wrong");
+        response.setData(null);
+        return response;
+    }
+
+
     @RequestMapping(value = "api/getall", method = RequestMethod.GET)
-    public Response getAll() {
+    public ResponseEntity<Response> getAll() {
         List<Product> productList = productDao.findAll();
         Response response = new Response();
         if (!productList.isEmpty()) {
             response.setStatus("success");
             response.setMessage("all product data retrieved");
             response.setData(productList);
-            return response;
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
         }
         response.setStatus("error");
         response.setMessage("sorry somethings wrong");
         response.setData(null);
-        return response;
+        return new ResponseEntity<Response>(response, HttpStatus.OK);
     }
 
     @RequestMapping(value = "api/delete/{productId}", method = RequestMethod.GET)
@@ -72,5 +91,20 @@ public class ProductController {
         response.setMessage("Successfully deleted"+ productId);
         response.setData(null);
         return response;
+    }
+
+    @RequestMapping(value = "api/getByProductCode/{pCode}", method = RequestMethod.GET)
+    public ResponseEntity<Response> getByProductCode(@PathVariable("pCode") String productCode){
+        Product product = productDao.getByProductCode(productCode);
+        Response response = new Response();
+        if (product != null){
+            response.setStatus("success");
+            response.setMessage("Product retirived with code");
+            response.setData(product);
+            return new ResponseEntity<Response>(response, HttpStatus.OK);
+        }
+        response = new Response("error", "something wrong", null);
+        return new ResponseEntity<Response>(response, HttpStatus.OK);
+
     }
 }
